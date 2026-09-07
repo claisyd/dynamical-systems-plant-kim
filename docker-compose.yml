@@ -1,0 +1,18 @@
+services:
+  jupyter-service:
+    image: curuy/math3888:latest
+    ports:
+      - "8888:8888"
+    volumes:
+      # Please change the directory to where you want the notebooks to be saved to 
+      - /Users/calvinlai/Desktop/MATH3888:/notebooks
+    container_name: jupyter-lab
+
+    command: >
+      jupyter lab
+      --ip=0.0.0.0
+      --port=8888
+      --no-browser
+      --allow-root
+      --NotebookApp.token='password'
+      --notebook-dir=/notebooks
