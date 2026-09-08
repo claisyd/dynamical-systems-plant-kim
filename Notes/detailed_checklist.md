@@ -30,11 +30,15 @@ Nondimensionalisation may reduce the number of independent parameter groups and 
 
 An exact reduction from 7D to 5D occurs under complete TTX blockade, $g_I=0$, because $X_I$ and $Y_I$ then no longer feed back into the remaining system. This reduction is therefore specific to the TTX endpoint and cannot in general be used for $g_I>0$.
 
+**Implementation note.** The baseline code in `src/plant_kim_model.py` / `notebooks/01_baseline_model.ipynb` uses Plant--Kim (1976) Tables I--II together with the Canavier et al. (1990) corrections to apparent typographical errors in the Table I rate functions $\alpha_m$, $\beta_m$, and $\beta_h$. Details are recorded in `Notes/model.md`.
+
+**Progress (baseline).** Sections 1.1--1.3 and 2.1 are complete: untreated 7D VODE bursting is reproduced. Sections 1.4--1.5 and all later drug / sweep / continuation items remain open.
+
 ---
 
 # 1. Baseline Simulations and Implementation
 
-## 1.1 Implement the original 7D Plant--Kim model
+## 1.1 Implement the original 7D Plant--Kim model ✅
 
 - Implement the full untreated seven-dimensional Plant--Kim system using the state variables
 
@@ -87,7 +91,7 @@ An exact reduction from 7D to 5D occurs under complete TTX blockade, $g_I=0$, be
 
 ---
 
-## 1.2 Inspect the gating functions and time constants
+## 1.2 Inspect the gating functions and time constants ✅
 
 Before interpreting any full model simulation, check that the individual gating functions have been entered correctly.
 
@@ -135,7 +139,7 @@ Before interpreting any full model simulation, check that the individual gating 
 
 ---
 
-## 1.3 Run the baseline simulation of normal R15 bursting
+## 1.3 Run the baseline simulation of normal R15 bursting ✅
 
 Once the individual functions appear correct:
 
@@ -187,6 +191,8 @@ Once the individual functions appear correct:
 
 ## 1.4 Check numerical and initial-condition robustness
 
+*(Not yet done systematically.)*
+
 Once normal bursting has been reproduced, check that it is not a numerical artefact or an artefact of a single initial condition.
 
 ### Numerical robustness
@@ -220,6 +226,8 @@ Once normal bursting has been reproduced, check that it is not a numerical artef
 ---
 
 ## 1.5 Make phase-plane projections
+
+*(Not yet done.)*
 
 Although the system is seven-dimensional, useful two-dimensional projections can still be plotted.
 
@@ -260,7 +268,7 @@ At this stage we are **not yet performing formal bifurcation analysis**.
 
 ---
 
-## 2.1 Confirm untreated normal bursting
+## 2.1 Confirm untreated normal bursting ✅
 
 - Use the baseline values
 

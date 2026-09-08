@@ -8,34 +8,36 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 
 # Simulation Pipeline
 
+**Implementation note.** The baseline 7D implementation uses Plant--Kim (1976) Tables I--II with the Canavier et al. (1990) corrections to apparent typographical errors in Table I rate functions ($\alpha_m$, $\beta_m$, $\beta_h$). See `Notes/model.md` and `src/plant_kim_model.py`.
+
 ## Baseline Simulations and Implementations
 
-1. Implement the original 7D model, putting the gating functions as auxiliary functions
-2. Inspect gating functions $S_i, Z_i$ against $V$ (should lie in $[0, 1]$ and have sigmoidal shapes) and plot time constants $\tau_i$ (should be positive)
-3. Run baseline simulation of normal R15 bursting: mainly plot $V(t)$ and the other variables (7 figures)
-4. Check different initial conditions, check robustness by comparing tolerance (we should see stable qualitative regime, burst period, spike count, and voltage range) and make sure we are not just looking at the transient (check latter part of time trace)
-5. Phase plane projections: plot $V$ against the other variables.
+1. [x] Implement the original 7D model, putting the gating functions as auxiliary functions
+2. [x] Inspect gating functions $S_i, Z_i$ against $V$ (should lie in $[0, 1]$ and have sigmoidal shapes) and plot time constants $\tau_i$ (should be positive)
+3. [x] Run baseline simulation of normal R15 bursting: mainly plot $V(t)$ and the other variables (7 figures)
+4. [ ] Check different initial conditions, check robustness by comparing tolerance (we should see stable qualitative regime, burst period, spike count, and voltage range) and make sure we are not just looking at the transient (check latter part of time trace)
+5. [ ] Phase plane projections: plot $V$ against the other variables.
 
 ## Drug Effect Validations
 
-1. Confirm untreated R15 normal bursting (see above point 3)
-2. TTX endpoint: Set $g_I=0$ and everything else as baseline; hope to recover slow-wave oscillation
-3. Ouabain endpoint: Set $I_\text{ep}=0$ and everything else as baseline; hope to recover regular beating
-4. Both interventions: Set $g_I=0$ and $I_{\text{ep}}=0$ and see what happens; we hypothesise that the trajectory may approach a stable equilibrium
-5. Check TTX endpoint against the 5D model as well for a sanity check (for $g_I=0$)
+1. [x] Confirm untreated R15 normal bursting (see above point 3)
+2. [ ] TTX endpoint: Set $g_I=0$ and everything else as baseline; hope to recover slow-wave oscillation
+3. [ ] Ouabain endpoint: Set $I_\text{ep}=0$ and everything else as baseline; hope to recover regular beating
+4. [ ] Both interventions: Set $g_I=0$ and $I_{\text{ep}}=0$ and see what happens; we hypothesise that the trajectory may approach a stable equilibrium
+5. [ ] Check TTX endpoint against the 5D model as well for a sanity check (for $g_I=0$)
 
 ## Bifurcation Studies
 
-1. Rewrite model to introduce $\alpha_I$ and $\alpha_P$
-2. Parameter sweep of $\alpha_I \to 0$ and $\alpha_P\to 0$; here we extract quantitative values like $V_{\text{min}},\ V_{\text{max}}$, and period throughout and e.g., plot $V_{\text{min}}$ and $V_{\text{max}}$ against $g_I$.
-3. Compute equilibria at the relevant parameter settings and assess their stability using the Jacobian eigenvalues
-4. TTX Bifurcation Study: continue $\alpha_I \to 0$ and $\alpha_P=1$
-5. Ouabain Bifurcation Study: continue $\alpha_P\to 0$ and $\alpha_I =1$
-6. Ouabain under TTX: continue $\alpha_P\to 0$ and $\alpha_I=0$
-7. Two-parameter continuation: continue selected bifurcation curves in the $(\alpha_I, \alpha_P)\in [0, 1]^2$ parameter plane
+1. [ ] Rewrite model to introduce $\alpha_I$ and $\alpha_P$
+2. [ ] Parameter sweep of $\alpha_I \to 0$ and $\alpha_P\to 0$; here we extract quantitative values like $V_{\text{min}},\ V_{\text{max}}$, and period throughout and e.g., plot $V_{\text{min}}$ and $V_{\text{max}}$ against $g_I$.
+3. [ ] Compute equilibria at the relevant parameter settings and assess their stability using the Jacobian eigenvalues
+4. [ ] TTX Bifurcation Study: continue $\alpha_I \to 0$ and $\alpha_P=1$
+5. [ ] Ouabain Bifurcation Study: continue $\alpha_P\to 0$ and $\alpha_I =1$
+6. [ ] Ouabain under TTX: continue $\alpha_P\to 0$ and $\alpha_I=0$
+7. [ ] Two-parameter continuation: continue selected bifurcation curves in the $(\alpha_I, \alpha_P)\in [0, 1]^2$ parameter plane
 
 ## Miscellaneous
 
-1. Bistability/hysteresis: at a potential transition, sweep the parameter downward ($1 \to 0$) and then upward ($0 \to 1$); If the forward and backward sweeps give different transition parameter values or converge to different attractors over the same parameter range, this suggests bistability/hysteresis
-2. Track equilibrium eigenvalues: plot/examine how the leading real parts change to understand why an equilibrium gains or loses stability.
-3. Fast-slow analysis: potential replacement for two-parameter continuation; decide later.
+1. [ ] Bistability/hysteresis: at a potential transition, sweep the parameter downward ($1 \to 0$) and then upward ($0 \to 1$); If the forward and backward sweeps give different transition parameter values or converge to different attractors over the same parameter range, this suggests bistability/hysteresis
+2. [ ] Track equilibrium eigenvalues: plot/examine how the leading real parts change to understand why an equilibrium gains or loses stability.
+3. [ ] Fast-slow analysis: potential replacement for two-parameter continuation; decide later.

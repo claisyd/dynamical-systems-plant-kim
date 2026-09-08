@@ -63,12 +63,20 @@ Conductances in Table I are quoted in units of $\mathrm{mho}\times 10^{-3}$, rev
 | $\tau_{Y_I}(V)$ | $\displaystyle \frac{12.5}{\alpha_h(V)+\beta_h(V)}$ |
 | $S_K(V)$ | $\displaystyle \frac{\alpha_n(V)}{\alpha_n(V)+\beta_n(V)}$ |
 | $\tau_{X_K}(V)$ | $\displaystyle \frac{12.5}{\alpha_n(V)+\beta_n(V)}$ |
-| $\alpha_m(V)$ | $\displaystyle \frac{0.1(-26-1.2V)}{\exp\!\left(\frac{26-V}{10}\right)-1}$ |
-| $\beta_m(V)$ | $\displaystyle 4\exp\!\left(\frac{51-1.2V}{18}\right)$ |
+| $\alpha_m(V)$ | $\displaystyle \frac{0.1(-26-1.2V)}{\exp\!\left(\frac{-26-1.2V}{10}\right)-1}$ |
+| $\beta_m(V)$ | $\displaystyle 4\exp\!\left(\frac{-51-1.2V}{18}\right)$ |
 | $\alpha_h(V)$ | $\displaystyle 0.07\exp\!\left(\frac{-51-1.21V}{20}\right)$ |
-| $\beta_h(V)$ | $\displaystyle \frac{1}{\exp\!\left(\frac{21-1.3V}{10}\right)+1}$ |
+| $\beta_h(V)$ | $\displaystyle \frac{1}{\exp\!\left(\frac{-21-1.3V}{10}\right)+1}$ |
 | $\alpha_n(V)$ | $\displaystyle \frac{0.01(-21-1.21V)}{\exp\!\left(\frac{-21-1.21V}{10}\right)-1}$ |
 | $\beta_n(V)$ | $\displaystyle 0.125\exp\!\left(\frac{-31-V}{80}\right)$ |
+
+**Table I typographical corrections** (printed scan vs. implementation). The printed Plant--Kim (1976) Table I on p. 231 contains inconsistencies with the stated HH voltage transformation. Canavier, Clark & Byrne (1990) document these as typesetting errors and give the corrected forms used above:
+
+1. $\alpha_m$: printed denominator $\exp((26-V)/10)-1$ → corrected $\exp((-26-1.2V)/10)-1$ (matches numerator / $\alpha_n$ pattern; removable singularity at $V=-26/1.2$, limit $1$).
+2. $\beta_m$: printed $\exp((51-1.2V)/18)$ → corrected $\exp((-51-1.2V)/18)$ (minus on the constant).
+3. $\beta_h$: printed $\exp((21-1.3V)/10)$ → corrected $\exp((-21-1.3V)/10)$ (minus on the constant).
+
+Literal printed $\beta_m$/$\beta_h$ leave $S_I$ near zero over the slow-wave voltage range and suppress spikes. $\alpha_h$ is already printed with the correct minus.
 
 ### Plant--Kim (1976) Table II: Additional parameters for the R15 model
 
