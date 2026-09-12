@@ -1,0 +1,7 @@
+run_id,regime,V_min,V_max,n_spikes,n_bursts,median_spikes_per_burst,period_s_median,X_I_max,spikes_per_burst
+ref_V50,bursting,-51.6234,27.4871,12,3,4,9.04347,0.991603,"4;4;4"
+ic_V60,bursting,-51.6217,27.4881,12,3,4,9.02647,0.991601,"4;4;4"
+ic_V40,bursting,-51.6405,27.4926,16,4,4,9.02842,0.991606,"4;4;4;4"
+ic_XP,bursting,-51.6236,27.4877,14,4,4,9.02652,0.991603,"4;4;4;2"
+tol_tight,bursting,-51.6234,27.487,12,3,4,9.04347,0.991604,"4;4;4"
+tol_loose,bursting,-51.6215,27.4875,12,3,4,9.04147,0.991601,"4;4;4"

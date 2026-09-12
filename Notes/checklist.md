@@ -10,13 +10,15 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 
 **Implementation note.** The baseline 7D implementation uses Plant--Kim (1976) Tables I--II with the Canavier et al. (1990) corrections to apparent typographical errors in Table I rate functions ($\alpha_m$, $\beta_m$, $\beta_h$). See `Notes/model.md` and `src/plant_kim_model.py`.
 
+**Robustness / phase-plane note** (`notebooks/02_robustness_phase_planes.ipynb`): sensible IC and VODE-tolerance perturbations converge to the same post-transient bursting regime — about 4 spikes per mature burst, period $\sim 9.0$ s, $V$ approximately $[-51.6, 27.5]$ mV.
+
 ## Baseline Simulations and Implementations
 
 1. [x] Implement the original 7D model, putting the gating functions as auxiliary functions
 2. [x] Inspect gating functions $S_i, Z_i$ against $V$ (should lie in $[0, 1]$ and have sigmoidal shapes) and plot time constants $\tau_i$ (should be positive)
 3. [x] Run baseline simulation of normal R15 bursting: mainly plot $V(t)$ and the other variables (7 figures)
-4. [ ] Check different initial conditions, check robustness by comparing tolerance (we should see stable qualitative regime, burst period, spike count, and voltage range) and make sure we are not just looking at the transient (check latter part of time trace)
-5. [ ] Phase plane projections: plot $V$ against the other variables.
+4. [x] Check different initial conditions, check robustness by comparing tolerance (we should see stable qualitative regime, burst period, spike count, and voltage range) and make sure we are not just looking at the transient (check latter part of time trace)
+5. [x] Phase plane projections: plot $V$ against the other variables.
 
 ## Drug Effect Validations
 

@@ -32,7 +32,9 @@ An exact reduction from 7D to 5D occurs under complete TTX blockade, $g_I=0$, be
 
 **Implementation note.** The baseline code in `src/plant_kim_model.py` / `notebooks/01_baseline_model.ipynb` uses Plant--Kim (1976) Tables I--II together with the Canavier et al. (1990) corrections to apparent typographical errors in the Table I rate functions $\alpha_m$, $\beta_m$, and $\beta_h$. Details are recorded in `Notes/model.md`.
 
-**Progress (baseline).** Sections 1.1--1.3 and 2.1 are complete: untreated 7D VODE bursting is reproduced. Sections 1.4--1.5 and all later drug / sweep / continuation items remain open.
+**Progress (baseline).** Sections 1.1--1.5 and 2.1 are complete: untreated 7D VODE bursting is reproduced, robustness-checked, and phase-plane projections documented in `notebooks/02_robustness_phase_planes.ipynb`. Later drug / sweep / continuation items remain open.
+
+**Robustness / phase-plane note.** Across sensible ICs ($V_0\in\{-60,-50,-40\}$ with steady-state gates; modest $X_P$ offset) and VODE settings (baseline / tighter / looser), the post-transient attractor is the same qualitative bursting regime: about 4 spikes per mature burst, period $\sim 9.0$ s, $V$ approximately $[-51.6, 27.5]$ mV.
 
 ---
 
@@ -189,9 +191,9 @@ Once the individual functions appear correct:
 
 ---
 
-## 1.4 Check numerical and initial-condition robustness
+## 1.4 Check numerical and initial-condition robustness ✅
 
-*(Not yet done systematically.)*
+Completed in `notebooks/02_robustness_phase_planes.ipynb` (IC + VODE-tolerance checks; post-transient metrics).
 
 Once normal bursting has been reproduced, check that it is not a numerical artefact or an artefact of a single initial condition.
 
@@ -225,9 +227,9 @@ Once normal bursting has been reproduced, check that it is not a numerical artef
 
 ---
 
-## 1.5 Make phase-plane projections
+## 1.5 Make phase-plane projections ✅
 
-*(Not yet done.)*
+Completed in `notebooks/02_robustness_phase_planes.ipynb`: post-transient six-panel $V$ vs $\{X_K,X_A,Y_A,X_P,X_I,Y_I\}$ plus enlarged $V$–$X_P$ slow-variable projection.
 
 Although the system is seven-dimensional, useful two-dimensional projections can still be plotted.
 
