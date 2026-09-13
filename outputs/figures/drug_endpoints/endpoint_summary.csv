@@ -1,0 +1,5 @@
+intervention,g_I,I_ep,regime,V_min,V_max,period_s,n_spikes,spikes_per_cycle,aps_absent,detail
+untreated,4.0,-0.22,bursting,-51.623350363172484,27.487073908164597,9.043472608681522,12,4.0,False,"n_spikes=12, n_groups=3, median_size=4.0"
+TTX,0.0,-0.22,slow_wave,-52.46262122387907,-38.89599816225635,9.971012463765582,0,nan,True,"V range=13.6 mV, n_spikes=0"
+ouabain,4.0,0.0,regular_beating,-49.296060774221125,26.60671833224597,0.4492507487512485,105,1.0,False,"n_spikes=105, n_groups=1, median_size=105.0"
+TTX+ouabain,0.0,0.0,equilibrium,-42.81221351792915,-42.81221332852681,nan,0,nan,True,"late V range=1.89e-07 mV, mean|dV/dt|=5.6e-12"

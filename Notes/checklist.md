@@ -12,6 +12,8 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 
 **Robustness / phase-plane note** (`notebooks/02_robustness_phase_planes.ipynb`): sensible IC and VODE-tolerance perturbations converge to the same post-transient bursting regime — about 4 spikes per mature burst, period $\sim 9.0$ s, $V$ approximately $[-51.6, 27.5]$ mV.
 
+**Drug-endpoint note** (`notebooks/03_drug_endpoints.ipynb`): complete TTX ($g_I=0$) yields slow-wave oscillation without fast spikes (period $\sim 10.0$ s); ouabain ($I_{\mathrm{ep}}=0$) yields regular beating (ISI $\sim 0.45$ s); TTX+ouabain converges to a stable equilibrium; exact 5D TTX reduction matches 7D common states to within VODE tolerance (max $|\Delta V|\sim 2\times 10^{-3}$ mV). See also `src/plant_kim_ttx_5d.py`.
+
 ## Baseline Simulations and Implementations
 
 1. [x] Implement the original 7D model, putting the gating functions as auxiliary functions
@@ -23,10 +25,10 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 ## Drug Effect Validations
 
 1. [x] Confirm untreated R15 normal bursting (see above point 3)
-2. [ ] TTX endpoint: Set $g_I=0$ and everything else as baseline; hope to recover slow-wave oscillation
-3. [ ] Ouabain endpoint: Set $I_\text{ep}=0$ and everything else as baseline; hope to recover regular beating
-4. [ ] Both interventions: Set $g_I=0$ and $I_{\text{ep}}=0$ and see what happens; we hypothesise that the trajectory may approach a stable equilibrium
-5. [ ] Check TTX endpoint against the 5D model as well for a sanity check (for $g_I=0$)
+2. [x] TTX endpoint: Set $g_I=0$ and everything else as baseline; hope to recover slow-wave oscillation
+3. [x] Ouabain endpoint: Set $I_\text{ep}=0$ and everything else as baseline; hope to recover regular beating
+4. [x] Both interventions: Set $g_I=0$ and $I_{\text{ep}}=0$ and see what happens; we hypothesise that the trajectory may approach a stable equilibrium
+5. [x] Check TTX endpoint against the 5D model as well for a sanity check (for $g_I=0$)
 
 ## Bifurcation Studies
 

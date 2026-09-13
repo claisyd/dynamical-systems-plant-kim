@@ -260,15 +260,18 @@ When there is disagreement between an informal note and the original Plant–Kim
 
 Currently reserved for the main computational notebooks produced for this project.
 
-A possible future organisation is:
+Current notebooks:
 
     notebooks/
     ├── 01_baseline_model.ipynb
-    ├── 02_drug_validation.ipynb
-    ├── 03_parameter_sweeps.ipynb
-    └── 04_bifurcation_analysis.ipynb
+    ├── 02_robustness_phase_planes.ipynb
+    └── 03_drug_endpoints.ipynb
 
-This structure is only a suggestion and does not need to be created immediately.
+Possible later notebooks (not yet created):
+
+    notebooks/
+    ├── 04_parameter_sweeps.ipynb
+    └── 05_bifurcation_analysis.ipynb
 
 ---
 
@@ -278,14 +281,13 @@ Reserved for reusable Python source code.
 
 The aim is eventually to avoid duplicating the full Plant–Kim model across multiple notebooks.
 
-Possible future files include:
+Existing reusable model modules:
 
     src/
     ├── plant_kim_model.py
-    ├── parameters.py
-    └── analysis_utils.py
+    └── plant_kim_ttx_5d.py
 
-Do not create unnecessary abstractions before the baseline model has been successfully reproduced.
+Additional helpers may be added later if needed. Do not create unnecessary abstractions before they are required.
 
 ---
 

@@ -32,9 +32,11 @@ An exact reduction from 7D to 5D occurs under complete TTX blockade, $g_I=0$, be
 
 **Implementation note.** The baseline code in `src/plant_kim_model.py` / `notebooks/01_baseline_model.ipynb` uses Plant--Kim (1976) Tables I--II together with the Canavier et al. (1990) corrections to apparent typographical errors in the Table I rate functions $\alpha_m$, $\beta_m$, and $\beta_h$. Details are recorded in `Notes/model.md`.
 
-**Progress (baseline).** Sections 1.1--1.5 and 2.1 are complete: untreated 7D VODE bursting is reproduced, robustness-checked, and phase-plane projections documented in `notebooks/02_robustness_phase_planes.ipynb`. Later drug / sweep / continuation items remain open.
+**Progress (baseline + drug endpoints).** Sections 1.1--1.5 and 2.1--2.5 are complete: untreated 7D VODE bursting is reproduced, robustness-checked, and phase-plane projections documented in `notebooks/02_robustness_phase_planes.ipynb`; drug endpoints (TTX, ouabain, combined) and the exact 5D TTX reduction sanity check are documented in `notebooks/03_drug_endpoints.ipynb` / `src/plant_kim_ttx_5d.py`. Later sweep / continuation items remain open.
 
 **Robustness / phase-plane note.** Across sensible ICs ($V_0\in\{-60,-50,-40\}$ with steady-state gates; modest $X_P$ offset) and VODE settings (baseline / tighter / looser), the post-transient attractor is the same qualitative bursting regime: about 4 spikes per mature burst, period $\sim 9.0$ s, $V$ approximately $[-51.6, 27.5]$ mV.
+
+**Drug-endpoint note.** At the hard endpoints (`notebooks/03_drug_endpoints.ipynb`): TTX ($g_I=0$) removes fast APs and leaves a slow wave (period $\sim 10.0$ s, $V$ approximately $[-52.5,-38.9]$ mV); ouabain ($I_{\mathrm{ep}}=0$) yields regular beating (ISI $\sim 0.45$ s); combined TTX+ouabain converges to equilibrium (late $V$ range $\sim 10^{-7}$ mV); 7D vs exact 5D TTX common-state errors are within VODE tolerance (max $|\Delta V|\sim 2\times 10^{-3}$ mV).
 
 ---
 
@@ -285,7 +287,7 @@ At this stage we are **not yet performing formal bifurcation analysis**.
 
 ---
 
-## 2.2 TTX endpoint
+## 2.2 TTX endpoint ✅
 
 Complete TTX blockade is represented by
 
@@ -318,9 +320,11 @@ with all other parameters initially held at their baseline values.
 
   as the transient inward conductance is suppressed.
 
+**Result.** Validated in `notebooks/03_drug_endpoints.ipynb` on the canonical 7D model: post-transient slow wave without fast spikes (period $\sim 10.0$ s, $V$ approximately $[-52.5,-38.9]$ mV).
+
 ---
 
-## 2.3 Compare the 7D TTX system against the exact 5D TTX reduction
+## 2.3 Compare the 7D TTX system against the exact 5D TTX reduction ✅
 
 At
 
@@ -360,9 +364,11 @@ $$
 
   For any $g_I>0$, $X_I$ and $Y_I$ again influence the voltage equation and the full 7D system must be used.
 
+**Result.** Exact 5D reduction in `src/plant_kim_ttx_5d.py`; 7D vs 5D common-state agreement within VODE tolerance (max $|\Delta V|\sim 2\times 10^{-3}$ mV) in `notebooks/03_drug_endpoints.ipynb`.
+
 ---
 
-## 2.4 Ouabain endpoint
+## 2.4 Ouabain endpoint ✅
 
 Complete inhibition of the electrogenic pump by ouabain is represented by
 
@@ -391,9 +397,11 @@ $$
   \text{regular beating}.
   $$
 
+**Result.** Validated in `notebooks/03_drug_endpoints.ipynb`: regular beating with ISI $\sim 0.45$ s and $V$ approximately $[-49.3, 26.6]$ mV.
+
 ---
 
-## 2.5 Both interventions
+## 2.5 Both interventions ✅
 
 Set
 
@@ -415,6 +423,8 @@ $$
   - exhibits any transient oscillations before settling.
 
 - This endpoint provides an initial qualitative check of Hypothesis 3 before the two-parameter analysis is attempted.
+
+**Result.** Validated in `notebooks/03_drug_endpoints.ipynb`: post-transient trajectory converges to a stable equilibrium (late-window $V$ range $\sim 10^{-7}$ mV).
 
 ---
 
