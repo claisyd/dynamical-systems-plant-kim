@@ -32,11 +32,13 @@ An exact reduction from 7D to 5D occurs under complete TTX blockade, $g_I=0$, be
 
 **Implementation note.** The baseline code in `src/plant_kim_model.py` / `notebooks/01_baseline_model.ipynb` uses Plant--Kim (1976) Tables I--II together with the Canavier et al. (1990) corrections to apparent typographical errors in the Table I rate functions $\alpha_m$, $\beta_m$, and $\beta_h$. Details are recorded in `Notes/model.md`.
 
-**Progress (baseline + drug endpoints).** Sections 1.1--1.5 and 2.1--2.5 are complete: untreated 7D VODE bursting is reproduced, robustness-checked, and phase-plane projections documented in `notebooks/02_robustness_phase_planes.ipynb`; drug endpoints (TTX, ouabain, combined) and the exact 5D TTX reduction sanity check are documented in `notebooks/03_drug_endpoints.ipynb` / `src/plant_kim_ttx_5d.py`. Later sweep / continuation items remain open.
+**Progress (baseline, drug endpoints, sweeps).** Sections 1.1--1.5, 2.1--2.5, and 3.1--3.3 are complete. Untreated bursting, robustness, and phase planes are in `notebooks/02_robustness_phase_planes.ipynb`. Drug endpoints and the exact 5D TTX check are in `notebooks/03_drug_endpoints.ipynb` / `src/plant_kim_ttx_5d.py`. Scaled drug parameters, direct VODE sweeps, and equilibrium/stability scans are in `notebooks/04_parameter_sweeps_equilibria.ipynb` / `src/plant_kim_analysis.py`. Sections 3.4--3.7 (continuation) and the miscellaneous items remain open.
 
 **Robustness / phase-plane note.** Across sensible ICs ($V_0\in\{-60,-50,-40\}$ with steady-state gates; modest $X_P$ offset) and VODE settings (baseline / tighter / looser), the post-transient attractor is the same qualitative bursting regime: about 4 spikes per mature burst, period $\sim 9.0$ s, $V$ approximately $[-51.6, 27.5]$ mV.
 
 **Drug-endpoint note.** At the hard endpoints (`notebooks/03_drug_endpoints.ipynb`): TTX ($g_I=0$) removes fast APs and leaves a slow wave (period $\sim 10.0$ s, $V$ approximately $[-52.5,-38.9]$ mV); ouabain ($I_{\mathrm{ep}}=0$) yields regular beating (ISI $\sim 0.45$ s); combined TTX+ouabain converges to equilibrium (late $V$ range $\sim 10^{-7}$ mV); 7D vs exact 5D TTX common-state errors are within VODE tolerance (max $|\Delta V|\sim 2\times 10^{-3}$ mV).
+
+**Sweep / equilibrium note.** In `notebooks/04_parameter_sweeps_equilibria.ipynb`, $\alpha_I$ and $\alpha_P$ scale the canonical $g_I$ and $I_{\mathrm{ep}}$ without rewriting the 7D model. TTX sweep ($\alpha_P=1$, $\alpha_I:1\to 0$): bursting gives way to a slow wave near $\alpha_I\approx 0.23$ ($g_I\approx 0.9$). Ouabain sweep ($\alpha_I=1$, $\alpha_P:1\to 0$): bursting gives way to regular beating (endpoint ISI $\sim 0.42$ s). Untreated equilibrium $V^*\approx -18.3116$ mV, leading complex pair $\mathrm{Re}(\lambda)\approx +0.01895$. A tangent-root candidate, not a labelled fold, sits near $g_I\approx 2.457$, $V^*\approx -26.13$ mV. Scanned equilibria on both one-parameter slices had a positive leading real part; no eigenvalue sign-crossing was tracked inside $[0,1]$.
 
 ---
 
@@ -448,7 +450,7 @@ The parameter sweeps should therefore be performed before formal continuation.
 
 ---
 
-## 3.1 Introduce scaled drug parameters
+## 3.1 Introduce scaled drug parameters ✅
 
 Define a scaled TTX parameter
 
@@ -532,9 +534,11 @@ $$
 (0,0)=\text{TTX + ouabain}.
 $$
 
+**Result.** Implemented as analysis-level scalings in `src/plant_kim_analysis.py` (`g_I=\alpha_I g_I^{(0)}`, $I_{\mathrm{ep}}=\alpha_P I_{\mathrm{ep}}^{(0)}$), not by rewriting `src/plant_kim_model.py`. Corner map checked in `notebooks/04_parameter_sweeps_equilibria.ipynb`.
+
 ---
 
-## 3.2 Perform coarse one-parameter simulation sweeps
+## 3.2 Perform coarse one-parameter simulation sweeps ✅
 
 Before using AUTO, perform ordinary ODE simulations at a sequence of parameter values.
 
@@ -622,9 +626,11 @@ $$
 
 - The main purpose of this stage is to identify approximately where AUTO continuation is likely to encounter interesting behaviour.
 
+**Result.** Direct 7D VODE sweeps in `notebooks/04_parameter_sweeps_equilibria.ipynb` (spacing $0.05$, with midpoints only at regime changes; summary plots are not bifurcation diagrams). TTX ($\alpha_P=1$): untreated bursting (about 4 spikes/burst, period $\sim 9.0$ s) becomes a slow wave without spikes by $\alpha_I=0$; the change is near $\alpha_I\approx 0.225$–$0.25$. Ouabain ($\alpha_I=1$): regular beating at $\alpha_P=0$ (ISI $\sim 0.42$ s); bursting near $\alpha_P=1$.
+
 ---
 
-## 3.3 Compute equilibria and assess their stability
+## 3.3 Compute equilibria and assess their stability ✅
 
 Use the coarse parameter sweeps to identify parameter values that are worth investigating more carefully.
 
@@ -700,6 +706,8 @@ $$
 may indicate that a Hopf bifurcation lies nearby.
 
 This step provides preliminary stability information before formal continuation and gives useful checks against the bifurcations later detected by AUTO.
+
+**Result.** Scalar current-balance root scan plus a finite-difference Jacobian (`src/plant_kim_analysis.py`). Untreated $V^*\approx -18.3116$ mV, unstable complex pair $\mathrm{Re}(\lambda)\approx +0.01895$. Tangent-root candidate on the TTX slice near $g_I\approx 2.457$ ($\alpha_I\approx 0.614$), $V^*\approx -26.13$ mV; another on the ouabain slice near $\alpha_P\approx 0.094$, $V^*\approx -41.5$ mV. These are candidates only, not labelled folds or Hopf points. Residuals were below $10^{-8}$. On both scanned slices every accepted root in $[0,1]$ had a positive leading real part, and no tracked eigenvalue sign-crossing was found inside the interval.
 
 ---
 

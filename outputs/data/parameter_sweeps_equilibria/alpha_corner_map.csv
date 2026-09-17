@@ -1,0 +1,5 @@
+corner,alpha_I,alpha_P,g_I,I_ep
+untreated,1.0,1.0,4.0,-0.22
+TTX,0.0,1.0,0.0,-0.22
+ouabain,1.0,0.0,4.0,-0.0
+TTX+ouabain,0.0,0.0,0.0,-0.0

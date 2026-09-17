@@ -14,6 +14,8 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 
 **Drug-endpoint note** (`notebooks/03_drug_endpoints.ipynb`): complete TTX ($g_I=0$) yields slow-wave oscillation without fast spikes (period $\sim 10.0$ s); ouabain ($I_{\mathrm{ep}}=0$) yields regular beating (ISI $\sim 0.45$ s); TTX+ouabain converges to a stable equilibrium; exact 5D TTX reduction matches 7D common states to within VODE tolerance (max $|\Delta V|\sim 2\times 10^{-3}$ mV). See also `src/plant_kim_ttx_5d.py`.
 
+**Sweep / equilibrium note** (`notebooks/04_parameter_sweeps_equilibria.ipynb`, `src/plant_kim_analysis.py`): $\alpha_I,\alpha_P$ are analysis-level scalings of the canonical parameters, not a rewritten model. Direct VODE sweeps (spacing $0.05$) show TTX $\alpha_I:1\to 0$ going from bursting to a slow wave near $\alpha_I\approx 0.23$, and ouabain $\alpha_P:1\to 0$ going from bursting to regular beating. Untreated equilibrium $V^*\approx -18.3116$ mV has an unstable complex pair with $\mathrm{Re}(\lambda)\approx +0.01895$. A tangent-root candidate on the TTX slice lies near $g_I\approx 2.457$ ($\alpha_I\approx 0.614$), $V^*\approx -26.13$ mV. These are not formal bifurcations.
+
 ## Baseline Simulations and Implementations
 
 1. [x] Implement the original 7D model, putting the gating functions as auxiliary functions
@@ -32,9 +34,9 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 
 ## Bifurcation Studies
 
-1. [ ] Rewrite model to introduce $\alpha_I$ and $\alpha_P$
-2. [ ] Parameter sweep of $\alpha_I \to 0$ and $\alpha_P\to 0$; here we extract quantitative values like $V_{\text{min}},\ V_{\text{max}}$, and period throughout and e.g., plot $V_{\text{min}}$ and $V_{\text{max}}$ against $g_I$.
-3. [ ] Compute equilibria at the relevant parameter settings and assess their stability using the Jacobian eigenvalues
+1. [x] Rewrite model to introduce $\alpha_I$ and $\alpha_P$
+2. [x] Parameter sweep of $\alpha_I \to 0$ and $\alpha_P\to 0$; here we extract quantitative values like $V_{\text{min}},\ V_{\text{max}}$, and period throughout and e.g., plot $V_{\text{min}}$ and $V_{\text{max}}$ against $g_I$.
+3. [x] Compute equilibria at the relevant parameter settings and assess their stability using the Jacobian eigenvalues
 4. [ ] TTX Bifurcation Study: continue $\alpha_I \to 0$ and $\alpha_P=1$
 5. [ ] Ouabain Bifurcation Study: continue $\alpha_P\to 0$ and $\alpha_I =1$
 6. [ ] Ouabain under TTX: continue $\alpha_P\to 0$ and $\alpha_I=0$
