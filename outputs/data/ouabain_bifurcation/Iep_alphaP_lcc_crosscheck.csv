@@ -1,0 +1,2 @@
+label,type,agreement,overlap_Iep_lo,overlap_Iep_hi,max_abs_dVmin,max_abs_dVmax,max_abs_dT_ms,d_global_Vmin,d_global_Vmax,d_period_min,d_period_max,method,n_bins_compared
+SUMMARY,SUMMARY,yes,0.44274504127450937,0.6480453257290261,0.11552670476041271,0.16770630007829723,13.182512858299532,0.02845097186966683,0.03569506581094117,3.62898333605699e-08,0.09845239154901719,outer_envelope_bins,40

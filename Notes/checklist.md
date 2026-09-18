@@ -18,6 +18,8 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 
 **TTX continuation note** (`notebooks/05_ttx_bifurcation.ipynb`, Docker AUTO for LC-C): direct $g_I$ EP-C recovers $\approx$2 Hopf + 2 LP on a folded branch; biological $\alpha_I\in[0,1]$ has LP at $\alpha_I\approx 0.614$ and **no Hopf** on the dose path (matching Hopf near $\alpha_I\approx 1.89$). Cross-check $g_I=\alpha_I g_I^{(0)}$ agrees. See `outputs/reports/05_ttx_bifurcation.html`.
 
+**Ouabain / combined continuation note** (`notebooks/06_ouabain_bifurcation.ipynb`, Docker AUTO for LC-C): $I_{\mathrm{ep}}^{\mathrm{eff}}=\alpha_P I_{\mathrm{ep}}^{(0)}$ with $I_{\mathrm{ep}}^{(0)}=-0.22\,\mu\mathrm{A}$ (biological image $I_{\mathrm{ep}}\in[-0.22,0]$). Ouabain alone ($\alpha_I=1$): **no** Hopf/LP on biological $\alpha_P\in[0,1]$; exterior Hopf near $I_{\mathrm{ep}}\approx 0.443$ ($\alpha_P\approx -2.01$) and LP near $I_{\mathrm{ep}}\approx -0.709$ ($\alpha_P\approx 3.22$). Bursting$\to$beating is therefore **not** a biological Hopf on the connected untreated EP-C branch. Complete TTX + ouabain ($\alpha_I=0$): eigenvalue-confirmed stable–unstable–stable with $H_{\mathrm{bio}}$ at $\alpha_P\approx 0.268$ and $H_{\mathrm{ext}}$ at $\approx 1.48$; one LC Hopf-bubble family. Along $\alpha_P:1\to 0$ the equilibrium crosses $H_{\mathrm{bio}}$ from unstable to stable — consistent with Hypothesis 3 / NB03, not a sole proof. See `outputs/reports/06_ouabain_bifurcation.html`.
+
 ## Baseline Simulations and Implementations
 
 1. [x] Implement the original 7D model, putting the gating functions as auxiliary functions
@@ -40,8 +42,8 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 2. [x] Parameter sweep of $\alpha_I \to 0$ and $\alpha_P\to 0$; here we extract quantitative values like $V_{\text{min}},\ V_{\text{max}}$, and period throughout and e.g., plot $V_{\text{min}}$ and $V_{\text{max}}$ against $g_I$.
 3. [x] Compute equilibria at the relevant parameter settings and assess their stability using the Jacobian eigenvalues
 4. [x] TTX Bifurcation Study: continue $\alpha_I \to 0$ and $\alpha_P=1$ (`notebooks/05_ttx_bifurcation.ipynb`; also direct $g_I$ EP-C + AUTO LC-C)
-5. [ ] Ouabain Bifurcation Study: continue $\alpha_P\to 0$ and $\alpha_I =1$
-6. [ ] Ouabain under TTX: continue $\alpha_P\to 0$ and $\alpha_I=0$
+5. [x] Ouabain Bifurcation Study: continue $\alpha_P\to 0$ and $\alpha_I =1$ (`notebooks/06_ouabain_bifurcation.ipynb`; also direct $I_{\mathrm{ep}}$ EP-C + AUTO LC-C; **no** bio H/LP on $[0,1]$)
+6. [x] Ouabain under TTX: continue $\alpha_P\to 0$ and $\alpha_I=0$ (same notebook; $H_{\mathrm{bio}}$ at $\alpha_P\approx 0.268$; stable–unstable–stable)
 7. [ ] Two-parameter continuation: continue selected bifurcation curves in the $(\alpha_I, \alpha_P)\in [0, 1]^2$ parameter plane
 
 ## Miscellaneous

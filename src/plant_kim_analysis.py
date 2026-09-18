@@ -113,6 +113,53 @@ def build_alpha_I_vode_system(
     return ode_sys
 
 
+def make_alpha_P_varspecs() -> Dict[str, str]:
+    """Continuation-only varspecs: electrogenic pump is alpha_P * I_ep.
+
+    Canonical plant_kim_model.make_varspecs is unchanged. Here I_ep is held at
+    the baseline value while alpha_P is the free ContClass parameter, so
+
+        I_ep_eff = alpha_P * I_ep = alpha_P * I_ep^(0)
+    """
+    specs = make_varspecs()
+    specs["V"] = (
+        "(1/C)*((g_I*X_I^3*Y_I + g_T)*(V_I - V)"
+        " + (g_K*X_K^4 + g_A*X_A*Y_A + g_P*X_P)*(V_K - V)"
+        " + g_L*(V_L - V) + alpha_P*I_ep + I_ext)"
+    )
+    return specs
+
+
+def build_alpha_P_vode_system(
+    pars: Optional[Mapping[str, float]] = None,
+    ics: Optional[Mapping[str, float]] = None,
+    name: str = "PlantKim7D_alphaP",
+    algparams: Optional[Mapping[str, object]] = None,
+    alpha_P: float = 1.0,
+):
+    """VODE system for ContClass continuation in alpha_P (not a model change).
+
+    Parameters include alpha_P and freeze I_ep at baseline I_EP0. Effective
+    electrogenic pump current is alpha_P * I_ep. Callers may override g_I
+    (e.g. g_I=0 for complete-TTX + ouabain) via pars=.
+    """
+    use_pars = deepcopy(BASELINE_PARS) if pars is None else dict(pars)
+    use_pars["I_ep"] = float(I_EP0)
+    use_pars["alpha_P"] = float(alpha_P)
+    use_ics = steady_state_ics(DEFAULT_V0) if ics is None else dict(ics)
+
+    DSargs = dst.args(name=name)
+    DSargs.pars = use_pars
+    DSargs.fnspecs = make_fnspecs()
+    DSargs.varspecs = make_alpha_P_varspecs()
+    DSargs.ics = use_ics
+    ode_sys = dst.Generator.Vode_ODEsystem(DSargs)
+    use_alg = dict(DEFAULT_ALGPARAMS) if algparams is None else dict(algparams)
+    if use_alg:
+        ode_sys.set(algparams=use_alg)
+    return ode_sys
+
+
 def corner_table() -> List[Dict[str, float]]:
     """Four endpoint corners with both alpha and physical parameters."""
     corners = [
