@@ -58,6 +58,11 @@ LC-C may detect bifurcations of periodic orbits such as limit points of cycles.
 For this project, periodic-orbit continuation is expected to use AUTO through
 the provided Docker environment.
 
+Docker / AUTO environment status (smoke-tested 2026-09-18): `docker compose up -d`
+with image `curuy/math3888:latest` successfully ran a Selkov `LC-C` continuation
+inside the container. See the `docker-compose.yml` section of `README.md` for
+startup commands and the CWD / `sys.path` requirement when invoking AUTO.
+
 ---
 
 # 2. Codimension-1 bifurcations

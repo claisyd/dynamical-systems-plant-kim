@@ -3,3 +3,9 @@ __pycache__/
 *.pyc
 .ipynb_checkpoints/
 .DS_Store
+
+# PyDSTool AUTO build artefacts (created in CWD on first LC-C)
+auto_temp/
+auto_*.py
+_auto_*.so
+_auto_*.cpython-*.so

@@ -315,26 +315,37 @@ Miscellaneous files that are unrelated to the current computational analysis may
 
 A Docker configuration is provided for an alternative PyDSTool environment with AUTO support.
 
-This may become useful later for:
+Use this environment for:
 
 - AUTO continuation;
-- periodic-orbit continuation;
-- Hopf bifurcations;
+- periodic-orbit continuation (`LC-C`);
+- Hopf bifurcations requiring AUTO;
 - more advanced bifurcation calculations.
 
-However, **do not use Docker automatically**.
+Keep the host `.venv` for ordinary VODE/PyDSTool work (baseline simulation, sweeps, EP-C where available). Do **not** modify or replace the host `.venv` to obtain AUTO.
 
-The current local `.venv` environment should be preferred for:
+### Verified Docker / AUTO smoke test (2026-09-18)
 
-- baseline model implementation;
-- direct ODE simulation;
-- time traces;
-- parameter sweeps;
-- initial exploratory analysis.
+Image: `curuy/math3888:latest` (compose service `jupyter-service`, container name `jupyter-lab`).
 
-Only use the Docker/AUTO environment when explicitly requested or when later continuation analysis requires functionality unavailable in the local environment.
+Start / stop from the repository root:
 
-Do not run, rebuild, or modify the Docker environment during initial setup checks.
+```bash
+docker compose up -d
+docker compose down
+```
+
+JupyterLab is then at `http://localhost:8888` with token `password`. The project tree is bind-mounted at `/notebooks`.
+
+Inside the container:
+
+- Python: `3.9.25` at `/usr/local/bin/python3`
+- PyDSTool: import OK (reports `1.19.5`)
+- AUTO: bundled under `PyDSTool/PyCont/auto` and compiled into the process CWD on first `LC-C`
+
+Minimal proven LC-C example: Selkov oscillator EP-C → Hopf → `LC-C` pattern from `Labs/Week 7 - Lab7 example.ipynb`.
+
+Important AUTO detail: PyDSTool writes `auto_*.py` / `_auto_*.so` into the **current working directory**, which must be importable (Jupyter notebooks already put CWD on `sys.path`; a script launched from another directory needs e.g. `PYTHONPATH="$(pwd)"` or an equivalent `sys.path` insert). Add generated AUTO artefacts to `.gitignore` rather than committing them.
 
 ---
 

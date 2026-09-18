@@ -242,7 +242,13 @@ Do not automatically:
 
 Prefer the local `.venv` for baseline implementation, direct VODE simulation, parameter sweeps, and initial exploratory analysis.
 
-Use the Docker/AUTO environment only when explicitly requested or when later continuation work requires it.
+Use the Docker/AUTO environment only when explicitly requested or when later continuation work requires it (especially `LC-C`).
+
+When AUTO/`LC-C` is requested, start with:
+
+`docker compose up -d`
+
+from the repository root (image `curuy/math3888:latest`). A 2026-09-18 smoke test confirmed Selkov periodic-orbit continuation works in that container. See `README.md` (docker-compose section) for Jupyter URL/token and the CWD/`sys.path` requirement. Do **not** modify the host `.venv` to obtain AUTO.
 
 ---
 
