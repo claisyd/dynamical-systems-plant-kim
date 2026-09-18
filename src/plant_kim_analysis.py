@@ -19,8 +19,13 @@ from typing import Dict, List, Mapping, Optional, Sequence, Tuple
 import numpy as np
 from scipy.optimize import brentq, minimize_scalar
 
+from copy import deepcopy
+
+import PyDSTool as dst
+
 from src.plant_kim_model import (
     BASELINE_PARS,
+    DEFAULT_ALGPARAMS,
     DEFAULT_V0,
     STATE_VARS,
     S_A,
@@ -29,6 +34,8 @@ from src.plant_kim_model import (
     S_P,
     Z_A,
     Z_I,
+    make_fnspecs,
+    make_varspecs,
     steady_state_ics,
     tau_X_I,
     tau_X_K,
@@ -58,6 +65,52 @@ def pars_from_alpha(alpha_I: float, alpha_P: float) -> Dict[str, float]:
     pars["g_I"] = float(alpha_I) * G_I0
     pars["I_ep"] = float(alpha_P) * I_EP0
     return pars
+
+
+def make_alpha_I_varspecs() -> Dict[str, str]:
+    """Continuation-only varspecs: inward conductance is alpha_I * g_I.
+
+    Canonical plant_kim_model.make_varspecs is unchanged. Here g_I is held at
+    the baseline value while alpha_I is the free ContClass parameter, so
+
+        g_I_eff = alpha_I * g_I = alpha_I * g_I^(0)
+    """
+    specs = make_varspecs()
+    specs["V"] = (
+        "(1/C)*((alpha_I*g_I*X_I^3*Y_I + g_T)*(V_I - V)"
+        " + (g_K*X_K^4 + g_A*X_A*Y_A + g_P*X_P)*(V_K - V)"
+        " + g_L*(V_L - V) + I_ep + I_ext)"
+    )
+    return specs
+
+
+def build_alpha_I_vode_system(
+    pars: Optional[Mapping[str, float]] = None,
+    ics: Optional[Mapping[str, float]] = None,
+    name: str = "PlantKim7D_alphaI",
+    algparams: Optional[Mapping[str, object]] = None,
+    alpha_I: float = 1.0,
+):
+    """VODE system for ContClass continuation in alpha_I (not a model change).
+
+    Parameters include alpha_I and freeze g_I at baseline G_I0. Effective
+    transient inward conductance is alpha_I * g_I.
+    """
+    use_pars = deepcopy(BASELINE_PARS) if pars is None else dict(pars)
+    use_pars["g_I"] = float(G_I0)
+    use_pars["alpha_I"] = float(alpha_I)
+    use_ics = steady_state_ics(DEFAULT_V0) if ics is None else dict(ics)
+
+    DSargs = dst.args(name=name)
+    DSargs.pars = use_pars
+    DSargs.fnspecs = make_fnspecs()
+    DSargs.varspecs = make_alpha_I_varspecs()
+    DSargs.ics = use_ics
+    ode_sys = dst.Generator.Vode_ODEsystem(DSargs)
+    use_alg = dict(DEFAULT_ALGPARAMS) if algparams is None else dict(algparams)
+    if use_alg:
+        ode_sys.set(algparams=use_alg)
+    return ode_sys
 
 
 def corner_table() -> List[Dict[str, float]]:

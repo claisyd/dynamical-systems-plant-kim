@@ -32,13 +32,15 @@ An exact reduction from 7D to 5D occurs under complete TTX blockade, $g_I=0$, be
 
 **Implementation note.** The baseline code in `src/plant_kim_model.py` / `notebooks/01_baseline_model.ipynb` uses Plant--Kim (1976) Tables I--II together with the Canavier et al. (1990) corrections to apparent typographical errors in the Table I rate functions $\alpha_m$, $\beta_m$, and $\beta_h$. Details are recorded in `Notes/model.md`.
 
-**Progress (baseline, drug endpoints, sweeps).** Sections 1.1--1.5, 2.1--2.5, and 3.1--3.3 are complete. Untreated bursting, robustness, and phase planes are in `notebooks/02_robustness_phase_planes.ipynb`. Drug endpoints and the exact 5D TTX check are in `notebooks/03_drug_endpoints.ipynb` / `src/plant_kim_ttx_5d.py`. Scaled drug parameters, direct VODE sweeps, and equilibrium/stability scans are in `notebooks/04_parameter_sweeps_equilibria.ipynb` / `src/plant_kim_analysis.py`. Sections 3.4--3.7 (continuation) and the miscellaneous items remain open.
+**Progress (baseline, drug endpoints, sweeps, TTX continuation).** Sections 1.1--1.5, 2.1--2.5, 3.1--3.3, and **3.4** are complete. Untreated bursting, robustness, and phase planes are in `notebooks/02_robustness_phase_planes.ipynb`. Drug endpoints and the exact 5D TTX check are in `notebooks/03_drug_endpoints.ipynb` / `src/plant_kim_ttx_5d.py`. Scaled drug parameters, direct VODE sweeps, and equilibrium/stability scans are in `notebooks/04_parameter_sweeps_equilibria.ipynb` / `src/plant_kim_analysis.py`. Formal TTX one-parameter continuation (direct $g_I$ and biological $\alpha_I$, EP-C + AUTO LC-C) is in `notebooks/05_ttx_bifurcation.ipynb` (Docker/AUTO). Sections 3.5--3.7 (ouabain / TTX+ouabain / two-parameter) and the miscellaneous items remain open.
 
 **Robustness / phase-plane note.** Across sensible ICs ($V_0\in\{-60,-50,-40\}$ with steady-state gates; modest $X_P$ offset) and VODE settings (baseline / tighter / looser), the post-transient attractor is the same qualitative bursting regime: about 4 spikes per mature burst, period $\sim 9.0$ s, $V$ approximately $[-51.6, 27.5]$ mV.
 
 **Drug-endpoint note.** At the hard endpoints (`notebooks/03_drug_endpoints.ipynb`): TTX ($g_I=0$) removes fast APs and leaves a slow wave (period $\sim 10.0$ s, $V$ approximately $[-52.5,-38.9]$ mV); ouabain ($I_{\mathrm{ep}}=0$) yields regular beating (ISI $\sim 0.45$ s); combined TTX+ouabain converges to equilibrium (late $V$ range $\sim 10^{-7}$ mV); 7D vs exact 5D TTX common-state errors are within VODE tolerance (max $|\Delta V|\sim 2\times 10^{-3}$ mV).
 
 **Sweep / equilibrium note.** In `notebooks/04_parameter_sweeps_equilibria.ipynb`, $\alpha_I$ and $\alpha_P$ scale the canonical $g_I$ and $I_{\mathrm{ep}}$ without rewriting the 7D model. TTX sweep ($\alpha_P=1$, $\alpha_I:1\to 0$): bursting gives way to a slow wave near $\alpha_I\approx 0.23$ ($g_I\approx 0.9$). Ouabain sweep ($\alpha_I=1$, $\alpha_P:1\to 0$): bursting gives way to regular beating (endpoint ISI $\sim 0.42$ s). Untreated equilibrium $V^*\approx -18.3116$ mV, leading complex pair $\mathrm{Re}(\lambda)\approx +0.01895$. A tangent-root candidate, not a labelled fold, sits near $g_I\approx 2.457$, $V^*\approx -26.13$ mV. Scanned equilibria on both one-parameter slices had a positive leading real part; no eigenvalue sign-crossing was tracked inside $[0,1]$.
+
+**TTX continuation note.** In `notebooks/05_ttx_bifurcation.ipynb` (Docker AUTO for LC-C): direct $g_I$ EP-C recovers a folded branch with two Hopf points (near $g_I\approx 7.57$ and $g_I\approx -10.09$) and two LPs (near $g_I\approx 51.78$ and $g_I\approx 2.46$). Biological $\alpha_I\in[0,1]$ EP-C finds the LP at $\alpha_I\approx 0.614$ and **no Hopf** on the TTX dose path; the matching Hopf sits near $\alpha_I\approx 1.89$ (outside $[0,1]$). $g_I$ and $\alpha_I$ agree under $g_I=\alpha_I g_I^{(0)}$. AUTO LC-C succeeded from the detected Hopfs. See also `Notes/bifurcation_reference.md` and `outputs/reports/05_ttx_bifurcation.html`.
 
 ---
 
@@ -711,7 +713,9 @@ This step provides preliminary stability information before formal continuation 
 
 ---
 
-## 3.4 TTX one-parameter bifurcation study
+## 3.4 TTX one-parameter bifurcation study ✅
+
+**Result.** Formal continuation is in `notebooks/05_ttx_bifurcation.ipynb` (EP-C on host-compatible PyDSTool; LC-C via Docker AUTO). Mapping $g_I^{\mathrm{eff}}=\alpha_I g_I^{(0)}$ with $g_I^{(0)}=4$. Direct $g_I$ EP-C (forward and backward) recovers a folded branch with Hopf points near $g_I\approx 7.57$ and $g_I\approx -10.09$, and LPs near $g_I\approx 51.78$ and $g_I\approx 2.46$. Biological $\alpha_I\in[0,1]$ finds LP at $\alpha_I\approx 0.614$ and **no Hopf** on the dose path; the $g_I\approx 7.57$ Hopf corresponds to $\alpha_I\approx 1.89$ (outside $[0,1]$). Cross-check under $\alpha_I=g_I/4$ agrees. AUTO LC-C from the detected Hopfs succeeded. Spike suppression / slow-wave transition is therefore **not** attributed to a Hopf inside $\alpha_I\in[0,1]$; time-domain notebooks 03–04 remain essential.
 
 For the formal TTX continuation, hold
 
@@ -725,7 +729,7 @@ $$
 \alpha_I
 $$
 
-as the continuation parameter.
+as the continuation parameter (also cross-checked by direct continuation in $g_I$).
 
 Follow
 
@@ -736,7 +740,7 @@ $$
 ### Equilibrium continuation
 
 - Start from a known equilibrium.
-- Continue the equilibrium branch as $\alpha_I$ changes.
+- Continue the equilibrium branch as $\alpha_I$ (and/or $g_I$) changes.
 - Track the stability of the equilibrium along the branch.
 - Detect bifurcation points automatically where possible.
 

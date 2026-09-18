@@ -265,13 +265,14 @@ Current notebooks:
     notebooks/
     ├── 01_baseline_model.ipynb
     ├── 02_robustness_phase_planes.ipynb
-    └── 03_drug_endpoints.ipynb
+    ├── 03_drug_endpoints.ipynb
+    ├── 04_parameter_sweeps_equilibria.ipynb
+    └── 05_ttx_bifurcation.ipynb
 
 Possible later notebooks (not yet created):
 
     notebooks/
-    ├── 04_parameter_sweeps.ipynb
-    └── 05_bifurcation_analysis.ipynb
+    └── 06_ouabain_bifurcation.ipynb
 
 ---
 

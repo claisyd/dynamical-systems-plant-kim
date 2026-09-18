@@ -272,6 +272,21 @@ Avoid unnecessary refactoring during scientific experiments.
 
 Keep computation separate from scientific interpretation where practical.
 
+### Notebook figures, captions, and HTML reports
+
+Analysis notebooks under `notebooks/` are the primary scientific narrative. Treat figures as part of that narrative, not as side artefacts that exist only on disk.
+
+For every figure that is written to `outputs/figures/`:
+
+1. include the image in the notebook in the **appropriate section** (immediately after the cell that produces it, or in a nearby dedicated figure cell);
+2. give a short markdown caption / description stating what the plot shows and any essential caveats (units, biological vs mathematical parameter ranges, duplicate-detection notes, etc.);
+3. prefer durable embedding via notebook markdown attachments (`attachment:filename.png`) so images survive HTML export, rather than relying only on fragile relative paths;
+4. when regenerating a report, render HTML **after** figures have been attached so `outputs/reports/*.html` contains the images inline.
+
+Blank, near-empty, or superseded diagnostic plots must not be left in the notebook or HTML report once a clearer figure exists.
+
+When building or repairing notebooks from generator scripts, keep figure captions in sync with the generator / presentation helper (for example `scripts/fix_05_ttx_presentation.py` for Notebook 05) so re-runs remain consistent.
+
 ---
 
 # 8. Dependency Snapshot

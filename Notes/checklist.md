@@ -16,6 +16,8 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 
 **Sweep / equilibrium note** (`notebooks/04_parameter_sweeps_equilibria.ipynb`, `src/plant_kim_analysis.py`): $\alpha_I,\alpha_P$ are analysis-level scalings of the canonical parameters, not a rewritten model. Direct VODE sweeps (spacing $0.05$) show TTX $\alpha_I:1\to 0$ going from bursting to a slow wave near $\alpha_I\approx 0.23$, and ouabain $\alpha_P:1\to 0$ going from bursting to regular beating. Untreated equilibrium $V^*\approx -18.3116$ mV has an unstable complex pair with $\mathrm{Re}(\lambda)\approx +0.01895$. A tangent-root candidate on the TTX slice lies near $g_I\approx 2.457$ ($\alpha_I\approx 0.614$), $V^*\approx -26.13$ mV. These are not formal bifurcations.
 
+**TTX continuation note** (`notebooks/05_ttx_bifurcation.ipynb`, Docker AUTO for LC-C): direct $g_I$ EP-C recovers $\approx$2 Hopf + 2 LP on a folded branch; biological $\alpha_I\in[0,1]$ has LP at $\alpha_I\approx 0.614$ and **no Hopf** on the dose path (matching Hopf near $\alpha_I\approx 1.89$). Cross-check $g_I=\alpha_I g_I^{(0)}$ agrees. See `outputs/reports/05_ttx_bifurcation.html`.
+
 ## Baseline Simulations and Implementations
 
 1. [x] Implement the original 7D model, putting the gating functions as auxiliary functions
@@ -37,7 +39,7 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 1. [x] Rewrite model to introduce $\alpha_I$ and $\alpha_P$
 2. [x] Parameter sweep of $\alpha_I \to 0$ and $\alpha_P\to 0$; here we extract quantitative values like $V_{\text{min}},\ V_{\text{max}}$, and period throughout and e.g., plot $V_{\text{min}}$ and $V_{\text{max}}$ against $g_I$.
 3. [x] Compute equilibria at the relevant parameter settings and assess their stability using the Jacobian eigenvalues
-4. [ ] TTX Bifurcation Study: continue $\alpha_I \to 0$ and $\alpha_P=1$
+4. [x] TTX Bifurcation Study: continue $\alpha_I \to 0$ and $\alpha_P=1$ (`notebooks/05_ttx_bifurcation.ipynb`; also direct $g_I$ EP-C + AUTO LC-C)
 5. [ ] Ouabain Bifurcation Study: continue $\alpha_P\to 0$ and $\alpha_I =1$
 6. [ ] Ouabain under TTX: continue $\alpha_P\to 0$ and $\alpha_I=0$
 7. [ ] Two-parameter continuation: continue selected bifurcation curves in the $(\alpha_I, \alpha_P)\in [0, 1]^2$ parameter plane
