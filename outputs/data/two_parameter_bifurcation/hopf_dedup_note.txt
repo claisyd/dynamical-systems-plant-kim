@@ -1,0 +1,2 @@
+H_bio and H_ext seeds lie on the SAME physical Hopf curve: the two continuations meet outside the biological square near (alpha_I, alpha_P) ≈ (-2.91, 1.33) (min sample distance ≈ 0.004). Deduplicated into one H_curve.
+same_physical_curve=True

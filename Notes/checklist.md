@@ -44,7 +44,7 @@ One possible advanced reduction is to split the dynamical system to a fast-slow 
 4. [x] TTX Bifurcation Study: continue $\alpha_I \to 0$ and $\alpha_P=1$ (`notebooks/05_ttx_bifurcation.ipynb`; also direct $g_I$ EP-C + AUTO LC-C)
 5. [x] Ouabain Bifurcation Study: continue $\alpha_P\to 0$ and $\alpha_I =1$ (`notebooks/06_ouabain_bifurcation.ipynb`; also direct $I_{\mathrm{ep}}$ EP-C + AUTO LC-C; **no** bio H/LP on $[0,1]$)
 6. [x] Ouabain under TTX: continue $\alpha_P\to 0$ and $\alpha_I=0$ (same notebook; $H_{\mathrm{bio}}$ at $\alpha_P\approx 0.268$; stable–unstable–stable)
-7. [ ] Two-parameter continuation: continue selected bifurcation curves in the $(\alpha_I, \alpha_P)\in [0, 1]^2$ parameter plane
+7. [x] Two-parameter continuation: continue selected bifurcation curves in the $(\alpha_I, \alpha_P)\in [0, 1]^2$ parameter plane
 
 ## Miscellaneous
 

@@ -1,0 +1,6 @@
+curve,slice,target,twoD_alpha_I,twoD_alpha_P,twoD_V,oneD_alpha,oneD_V,diff_alpha,diff_V,status,n_near_slice,n_bio_alpha_P,note,n_bio_alpha_I
+LP,alpha_P=1,LP_bio,0.6141386577946849,1.0,-26.13422141940845,0.6141386577946849,-26.13422141940845,0.0,0.0,PASS,,,,
+H,alpha_I=0,H_bio,0.0,0.2679200893294544,-44.79017263598727,0.2679201035441923,-44.79017270788987,1.4214737942275235e-08,7.190260475908872e-08,PASS,,,,
+H_from_Hext,alpha_I=0,H_ext,0.0,1.4803020072346227,-49.901949987924944,1.48030201106803,-49.90195002161819,3.833407369313591e-09,3.3693247303290264e-08,PASS,,,,
+H,alpha_I=1,no_bio_H_expected,,,,,,,,PASS,0,0,NB06 ouabain-alone: no biological Hopf on untreated-connected branch,
+H,alpha_P=1,no_bio_H_expected,,,,,,,,PASS,8,,"NB05 TTX-only: no biological Hopf in alpha_I in [0,1]",0
