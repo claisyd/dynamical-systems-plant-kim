@@ -1,0 +1,9 @@
+{
+  "lambda_crit_re": -1.265878092165436e-10,
+  "lambda_crit_im": 0.0,
+  "spectral_gap_zero": 0.0001250411774277076,
+  "residual_max": 2.498001805406602e-16,
+  "max_real_part": 0.0588762174708336,
+  "alpha_I": 0.6141386577946849,
+  "alpha_P": 1.0
+}

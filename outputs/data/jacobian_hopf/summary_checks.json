@@ -1,0 +1,12 @@
+{
+  "jacobian_validation_pass": 1,
+  "H_bio_omega": 0.0007547579935373537,
+  "T_lin_ms": 8324.768152148925,
+  "near_hopf_min_rel_period_error": 3.424329262270343e-10,
+  "transversality_dRe_median": 0.0005835661449229376,
+  "semianalytic_dRe": 0.0005835660656046181,
+  "sn_a": -0.2061500857762509,
+  "sn_b": 0.0011520603359711703,
+  "sn_lambda_crit_abs": 1.265878092165436e-10,
+  "sn_gap": 0.0001250411774277076
+}
