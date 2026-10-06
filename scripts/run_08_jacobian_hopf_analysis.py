@@ -33,6 +33,7 @@ from src.plant_kim_jacobian import (
     landmark_H_bio,
     landmark_LP_bio,
     match_spectra,
+    nullvectors_zero,
     sn_coefficients,
     spectral_gap_excluding,
     track_eigenvalues,
@@ -374,23 +375,40 @@ def fig_period_convergence(lc_rows: List[Dict], T_lin: float, alpha_H: float, pa
     return a, T, A, rel
 
 
-def fig_fold_normal_form(track: Dict, alpha_LP: float, a_coef: float, b_coef: float, path: Path):
-    """Compare local V-shift vs sqrt scaling if coefficients reliable."""
+def fig_fold_normal_form(
+    track: Dict,
+    alpha_LP: float,
+    a_coef: float,
+    b_coef: float,
+    path: Path,
+    q_V: float,
+):
+    """Compare local V-shift vs sqrt scaling if coefficients reliable.
+
+    With nullvector normalization p^T q = 1 (and ||q||_2 = 1 from SVD),
+    the reduced coordinate satisfies u = ±sqrt(-(a/b) Δα_I), while the
+    voltage component of the branch is V - V_LP ≈ q_V u.
+    """
     p = track["param"]
     V = track["V"]
     i_fold = int(np.argmin(p))
     V_lp = V[i_fold]
-    # projection coordinate: use V - V_lp as proxy for u
-    u = V - V_lp
+    dV = V - V_lp
     mu = p - alpha_LP
-    # predicted: u^2 = - (a/b) mu   for mu on the side where -a/b * mu > 0
+    # predicted: u^2 = - (a/b) mu; voltage = q_V * u
     ratio = -a_coef / b_coef if abs(b_coef) > 0 else float("nan")
     fig, ax = plt.subplots(figsize=(6.5, 4.2))
-    ax.plot(mu, u, "o", ms=3, color="C0", label="EP-C $(V-V_{LP})$")
+    ax.plot(mu, dV, "o", ms=3, color="C0", label="EP-C $(V-V_{LP})$")
     mu_grid = np.linspace(0, max(0, mu.max()), 200)
     if ratio > 0:
-        pred = np.sqrt(np.maximum(ratio * mu_grid, 0.0))
-        ax.plot(mu_grid, pred, "C3-", lw=1.6, label=r"$\pm\sqrt{-(a/b)\,\Delta\alpha_I}$")
+        pred = float(q_V) * np.sqrt(np.maximum(ratio * mu_grid, 0.0))
+        ax.plot(
+            mu_grid,
+            pred,
+            "C3-",
+            lw=1.6,
+            label=r"$\pm q_V\sqrt{-(a/b)\,\Delta\alpha_I}$",
+        )
         ax.plot(mu_grid, -pred, "C3-", lw=1.6)
     ax.axvline(0.0, color="0.5", ls="--", lw=0.8)
     ax.set_xlabel(r"$\alpha_I - \alpha_I^{LP}$")
@@ -563,7 +581,11 @@ def main():
     # SN coefficients
     print("Saddle-node coefficients ...")
     sn_c = sn_coefficients(lp["state"], lp["pars"], "g_I", G_I0)
+    q_sn, _p_sn = nullvectors_zero(jacobian_symbolic(lp["state"], lp["pars"]))
+    q_V = float(q_sn[0])  # STATE_VARS index 0 is V; existing p^T q = 1 normalization
+    sn_c["q_V"] = q_V
     print(f"  a={sn_c['a']:.6e}  b={sn_c['b']:.6e}  sigma_min={sn_c['sigma_min']:.3e}")
+    print(f"  q_V={q_V:.12g}  (voltage component of right nullvector)")
     save_json(DATADIR / "sn_coefficients.json", sn_c)
     save_csv(
         DATADIR / "sn_coefficients.csv",
@@ -574,6 +596,7 @@ def main():
                 "b": sn_c["b"],
                 "sigma_min": sn_c["sigma_min"],
                 "p_dot_q": sn_c["p_dot_q"],
+                "q_V": q_V,
             }
         ],
     )
@@ -584,6 +607,7 @@ def main():
             sn_c["a"],
             sn_c["b"],
             FIGDIR / "08_fold_normal_form.png",
+            q_V=q_V,
         )
         print("  fold normal-form figure saved")
 

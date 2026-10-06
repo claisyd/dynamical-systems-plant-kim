@@ -348,7 +348,10 @@ $$
 a = p^{\mathsf T} F_{\alpha_I},\qquad
 b = \tfrac12 p^{\mathsf T} D_x^{2}F[q,q]
 $$
-are computed from the symbolic Hessian action."""
+are computed from the symbolic Hessian action. Nearby equilibria satisfy $u=\pm\sqrt{-(a/b)\,\Delta\alpha_I}$ in the reduced coordinate, so the voltage deviation is
+$$
+V-V_{LP}\approx q_V\,u=\pm q_V\sqrt{-(a/b)\,\Delta\alpha_I}.
+$$"""
         )
     )
     cells.append(
@@ -359,14 +362,18 @@ print("a = {:.6e}".format(sn_c["a"]))
 print("b = {:.6e}".format(sn_c["b"]))
 print("σ_min(J) = {:.3e}".format(sn_c["sigma_min"]))
 print("p·q = {:.6g}".format(sn_c["p_dot_q"]))
+print("q_V = {:.12g}".format(sn_c.get("q_V", float("nan"))))
 print("Nondegeneracy: |a|,|b| clearly nonzero relative to σ_min.")
+print("Voltage prediction uses V-V_LP ≈ ± q_V sqrt(-(a/b) Δα_I).")
 """
         )
     )
     cells.append(
         figure_attachment_cell(
             "Local Fold Geometry near the Biological Saddle-Node",
-            r"EP-C voltage deviation from the fold versus $\Delta\alpha_I$, compared with the square-root scaling implied by the computed normal-form coefficients $a$ and $b$ (local qualitative comparison).",
+            r"EP-C voltage deviation from the fold versus $\Delta\alpha_I$, compared with the predicted voltage scaling "
+            r"$V-V_{LP}\approx\pm q_V\sqrt{-(a/b)\,\Delta\alpha_I}$ from the computed normal-form coefficients $a$, $b$ "
+            r"and the voltage component $q_V$ of the right nullvector (normalization $p^{\mathsf T}q=1$).",
             "08_fold_normal_form.png",
         )
     )
