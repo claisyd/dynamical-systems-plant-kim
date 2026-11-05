@@ -64,7 +64,7 @@ The analysis includes:
 - Examining critical eigenvalues and the near-singularity of the Jacobian at the saddle-node point.
 - Evaluating saddle-node nondegeneracy conditions using left/right null vectors and second derivatives of the vector field.
 - Testing Hopf transversality through changes in the real part of the critical eigenvalue pair.
-- Comparing the linearised Hopf period $T_{\mathrm{lin}}=2\pi/\operatorname{Im}(\lambda_H)$ with periods obtained from AUTO continuation near onset.
+- Comparing the linearised Hopf period $T_{\mathrm{lin}}=2\pi/\mathrm{Im}(\lambda_H)$ with periods obtained from AUTO continuation near onset.
 
 See [`notebooks/08_jacobian_hopf_local_analysis.ipynb`](notebooks/08_jacobian_hopf_local_analysis.ipynb), [`src/plant_kim_jacobian.py`](src/plant_kim_jacobian.py), and the [individual analysis report](Other/08_jacobian_hopf_local_analysis.pdf).
 
