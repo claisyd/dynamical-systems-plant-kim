@@ -1,445 +1,128 @@
-# MATH3888 — Plant–Kim R15 Neuron Modelling Project
+# Modelling Drug-Induced Changes in Bursting Dynamics of the *Aplysia* R15 Neuron
 
-## Project Overview
+**MATH3888 Mathematics Capstone · University of Sydney · Semester 2, 2026**
 
-This repository contains the computational work for our MATH3888 project on the dynamics of the *Aplysia* R15 bursting neuron using the Plant–Kim model.
+This repository contains the computational work for a mathematics capstone project investigating how tetrodotoxin (TTX) and ouabain affect the dynamics of the *Aplysia* R15 neuron. Using the seven-dimensional Plant–Kim (1976) model, the project combines numerical simulation, equilibrium and stability analysis, and numerical bifurcation continuation to study the transition between bursting, non-spiking slow oscillations, regular firing, and resting behaviour.
 
-The main mathematical model is the seven-dimensional Plant–Kim normal bursting model. The project will initially focus on:
+The work was developed in the context of a **group research project**, alongside a separate **individual mathematical analysis** of the model's Jacobian and local bifurcation mechanisms. Numerical results are compared qualitatively with the experimental observations of Junge and Stephens (1973).
 
-1. implementing and validating the baseline 7D model;
-2. reproducing untreated bursting;
-3. reproducing the effects of TTX and ouabain;
-4. performing coarse parameter sweeps;
-5. computing equilibria and assessing their stability;
-6. performing one-parameter bifurcation analysis;
-7. potentially performing two-parameter continuation or fast–slow analysis as an extension.
+## Project overview
 
-The current priority is **environment verification, model implementation, and simulation groundwork**. Formal AUTO bifurcation analysis comes later.
+The R15 neuron exhibits endogenous bursting: clusters of action potentials separated by quieter intervals. The Plant–Kim model extends the Hodgkin–Huxley framework with additional ionic currents and slow gating dynamics to represent this behaviour.
 
----
+We study two pharmacological interventions:
 
-# Important Computational Rules
+- **Tetrodotoxin (TTX)** inhibits the transient inward current responsible for fast action potentials, revealing a slower membrane oscillation.
+- **Ouabain** inhibits the electrogenic pump current, changing the balance of membrane currents and the resulting activity.
 
-These rules should be followed unless explicitly changed by the project members.
+Their effects are represented by two dimensionless parameters,
 
-## Canonical project environment
+$$
+g_I = \alpha_I g_I^{(0)}, \qquad
+I_{\mathrm{ep}} = \alpha_P I_{\mathrm{ep}}^{(0)},
+\qquad (\alpha_I,\alpha_P)\in[0,1]^2.
+$$
 
-The project contains a local virtual environment:
+Here, $(\alpha_I,\alpha_P)=(1,1)$ denotes the untreated model; setting either parameter to zero represents complete blockade of the corresponding current. At complete TTX blockade, two gating variables decouple from the other equations, allowing an exact five-dimensional reduction for comparison with the full system.
 
-`.venv/`
+The main objective is to relate **qualitative changes in simulated neuronal activity** to the underlying structure of equilibria, periodic orbits, and their bifurcations. Drug scaling is a mathematical approximation of the interventions, not a detailed pharmacokinetic model.
 
-This is the preferred Python environment for the project. PyDSTool has already been successfully installed and imported in this environment.
+## Computational approach
 
-### Canonical Python interpreter
+The investigation is organised into four parts:
 
-- Canonical Python interpreter:
+1. **Baseline and drug-response simulations.** Implement the seven-dimensional model; verify untreated bursting; test robustness to initial conditions and numerical settings; simulate untreated, TTX, ouabain, and combined-drug endpoints.
+2. **Parameter sweeps and equilibrium stability.** Vary drug-strength parameters, locate equilibria, and examine Jacobian eigenvalues alongside time-domain simulations.
+3. **Numerical bifurcation analysis.** Use PyDSTool for one-parameter equilibrium continuation (`EP-C`), AUTO-backed periodic-orbit continuation (`LC-C`), and two-parameter fold (`LP-C`) and Hopf (`H-C2`) continuation in the $(\alpha_I,\alpha_P)$ plane.
+4. **Local mathematical analysis (individual component).** Construct and validate the full symbolic $7\times7$ Jacobian, investigate saddle-node nondegeneracy and Hopf transversality, and compare local theoretical predictions with numerical continuation.
 
-      ./.venv/bin/python
+The analysis distinguishes the biologically motivated parameter square $[0,1]^2$ from **extended mathematical continuation ranges**. In particular, equilibrium bifurcation curves do not on their own classify the full bursting or beating dynamics; those interpretations also require time traces and, where available, periodic-orbit calculations.
 
-- Absolute path on this machine:
+## Selected visualisations
 
-      /Users/calvinlai/Desktop/MATH3888/.venv/bin/python
+### Simulated activity under the drug interventions
 
-- Prefer this explicit `.venv` interpreter. Do **not** use bare `python` or `python3` for project work.
+![Plant–Kim simulated voltage traces for untreated, TTX, ouabain and combined-drug conditions](ReportFigs/cleaned/baseline_drug_dynamics.png)
 
-- You may still activate the environment with `source .venv/bin/activate` if convenient, but prefer the explicit path above for scripts and agent commands.
+*Numerical membrane-voltage trajectories from the Plant–Kim model under four parameter conditions. These are model simulations, not experimental recordings.*
 
-### Canonical Jupyter kernel
+### Two-parameter bifurcation structure
 
-- Internal kernel name: `pydstool`
-- Display name: `Python 3.9 (PyDSTool)`
-- This kernel launches the project `.venv/bin/python` (absolute path in its `kernel.json`).
-- Use this kernel for project notebooks.
-- Do **not** use the generic `python3` kernel for project notebooks unless it is explicitly verified to be the canonical project kernel. The venv-local `python3` kernel currently uses bare `"python"` in `argv[0]` and is PATH-dependent.
-- Prefer explicit `.venv` commands rather than bare `python`, `python3`, `jupyter`, or `jupyter lab`.
-- Preferred JupyterLab command:
+![Two-parameter Plant–Kim equilibrium bifurcation map in alpha_I and alpha_P](ReportFigs/cleaned/alphaI_alphaP_bifurcation_map.png)
 
-      ./.venv/bin/jupyter-lab
+*Fold and Hopf continuation in the drug-strength parameter plane. The biologically motivated region is $[0,1]^2$; continuation may also reveal mathematically relevant features outside this region.*
 
-  equivalently:
+Additional report-ready figures are available in [`ReportFigs/`](ReportFigs/), with numerical data and diagnostic plots under [`outputs/`](outputs/).
 
-      ./.venv/bin/python -m jupyter lab
+## Individual mathematical component
 
-The workspace Cursor/VS Code interpreter is configured via `.vscode/settings.json` to `${workspaceFolder}/.venv/bin/python`.
+The separate individual study investigates the **local mechanisms behind selected bifurcation points**, rather than only identifying them through software continuation. In particular, it examines a saddle-node point on the TTX parameter slice and a Hopf point on the ouabain slice under complete TTX.
 
----
+The analysis includes:
 
-## PyDSTool execution rule
+- Building the full symbolic Jacobian with **SymPy** and cross-validating it against finite-difference and continuation-based calculations.
+- Examining critical eigenvalues and the near-singularity of the Jacobian at the saddle-node point.
+- Evaluating saddle-node nondegeneracy conditions using left/right null vectors and second derivatives of the vector field.
+- Testing Hopf transversality through changes in the real part of the critical eigenvalue pair.
+- Comparing the linearised Hopf period $T_{\mathrm{lin}}=2\pi/\operatorname{Im}(\lambda_H)$ with periods obtained from AUTO continuation near onset.
 
-- PyDSTool may segfault with exit code **139** under Cursor's restricted sandbox.
-- It has been confirmed to work under unrestricted/local execution.
-- If PyDSTool fails only inside the sandbox, do **not** conclude that the environment is broken.
-- Prefer unrestricted/local execution using the explicit `.venv/bin/python` interpreter for actual PyDSTool computation.
+See [`notebooks/08_jacobian_hopf_local_analysis.ipynb`](notebooks/08_jacobian_hopf_local_analysis.ipynb), [`src/plant_kim_jacobian.py`](src/plant_kim_jacobian.py), and the [individual analysis report](Other/08_jacobian_hopf_local_analysis.pdf).
 
----
+## Repository guide
 
-## PyDSTool version metadata note
+| Location | Contents |
+| --- | --- |
+| [`notebooks/`](notebooks/) | Main computational narrative, from baseline implementation through bifurcation analysis |
+| [`src/`](src/) | Reusable Plant–Kim model, analysis helpers, exact TTX reduction, and symbolic Jacobian |
+| [`scripts/`](scripts/) | Continuation engines, numerical analysis scripts, and notebook/figure preparation utilities |
+| [`outputs/`](outputs/) | Saved numerical tables, continuation data, and diagnostic figures |
+| [`ReportFigs/`](ReportFigs/) | Curated figures used for reporting and presentation |
+| [`Notes/`](Notes/) | Model specification, mathematical notes, and development checklists |
+| [`References/`](References/) | Source literature and background reading |
+| [`Other/`](Other/) | Project reports, supporting documents, and earlier drafts |
+| [`Code/`](Code/) and [`Labs/`](Labs/) | Course examples and PyDSTool practice material; not all are original project analyses |
 
-- `PyDSTool.__version__` may report `1.23.5`.
-- Installed distribution metadata reports PyDSTool `0.91.0`.
-- This discrepancy is known.
-- Do **not** attempt to "fix" it by reinstalling or upgrading PyDSTool.
+### Main notebooks
 
----
+| Notebook | Focus |
+| --- | --- |
+| [`01_baseline_model.ipynb`](notebooks/01_baseline_model.ipynb) | Implement and validate untreated R15 bursting |
+| [`02_robustness_phase_planes.ipynb`](notebooks/02_robustness_phase_planes.ipynb) | Robustness checks and phase-plane projections |
+| [`03_drug_endpoints.ipynb`](notebooks/03_drug_endpoints.ipynb) | TTX, ouabain, combined blockade, and 7D/5D comparison |
+| [`04_parameter_sweeps_equilibria.ipynb`](notebooks/04_parameter_sweeps_equilibria.ipynb) | Drug-parameter sweeps, equilibria, and local stability |
+| [`05_ttx_bifurcation.ipynb`](notebooks/05_ttx_bifurcation.ipynb) | One-parameter TTX continuation |
+| [`06_ouabain_bifurcation.ipynb`](notebooks/06_ouabain_bifurcation.ipynb) | Ouabain continuation, including complete-TTX conditions |
+| [`07_two_parameter_bifurcation.ipynb`](notebooks/07_two_parameter_bifurcation.ipynb) | Two-parameter fold and Hopf bifurcation curves |
+| [`08_jacobian_hopf_local_analysis.ipynb`](notebooks/08_jacobian_hopf_local_analysis.ipynb) | Individual Jacobian, saddle-node, and Hopf analysis |
 
-## PyDSTool Solver Rule
+The canonical seven-dimensional equations and parameters are specified in [`Notes/model.md`](Notes/model.md) and implemented in [`src/plant_kim_model.py`](src/plant_kim_model.py). The notebook sequence is the best starting point for understanding the analysis.
 
-For direct ODE simulation using the current local environment:
+## Software and reproducibility
 
-**USE VODE ONLY.**
+**Core tools:** Python 3.9, NumPy, SciPy, Matplotlib, SymPy, Jupyter, PyDSTool, and AUTO (for periodic-orbit and advanced continuation).
 
-Do not use:
+The repository contains a [`requirements-lock.txt`](requirements-lock.txt) snapshot of the working local Python environment. The original setup used **Python 3.9.20** and a project-local `.venv` with the `Python 3.9 (PyDSTool)` Jupyter kernel. Because PyDSTool and AUTO have older platform-specific dependencies, the lockfile is a reference snapshot rather than a guarantee of cross-platform installation.
 
-- `Radau`;
-- `Dopri`;
-- `Dopri853`.
-
-These solvers have previously caused compatibility/compilation problems in the current macOS setup.
-
-Unless explicitly instructed otherwise, use:
-
-    PyDSTool.Generator.Vode_ODEsystem
-
-for direct ODE integration.
-
----
-
-## PyDSTool Documentation / Syntax Rule
-
-PyDSTool is an older library and some documentation is incomplete or difficult to locate.
-
-**Do not invent or guess PyDSTool APIs.**
-
-When uncertain about PyDSTool syntax, use the following sources in approximately this order:
-
-1. existing working examples in this repository;
-2. guided workshop material in `Labs/`;
-3. `Code/practice.ipynb`;
-4. installed PyDSTool source or documentation if necessary;
-5. external documentation only when the above are insufficient.
-
-Prefer adapting syntax that is already known to work in this environment.
-
-If the correct PyDSTool API cannot be determined confidently, stop and explain the uncertainty rather than silently inventing syntax.
-
----
-
-# Repository Structure
-
-## Hidden / Configuration Files
-
-### `.venv/`
-
-Local Python virtual environment containing the working PyDSTool installation.
-
-This directory should generally not be edited manually.
-
-### `.gitignore`
-
-Git ignore configuration.
-
-### `.cursorignore`
-
-Cursor indexing exclusions.
-
-The virtual environment may be ignored by Cursor indexing, but its Python executable may still be used to run the project.
-
----
-
-# `Code/`
-
-Contains previous computational examples.
-
-## `textbook.ipynb`
-
-Implementation of figures/examples from the dynamical systems textbook.
-
-This notebook **does not use PyDSTool**.
-
-It may be useful for general mathematical or plotting ideas, but should normally be ignored as a reference for PyDSTool syntax.
-
-## `practice.ipynb`
-
-Contains basic bifurcation examples implemented using PyDSTool, including:
-
-- saddle-node bifurcation;
-- transcritical bifurcation;
-- pitchfork bifurcation.
-
-This is a useful reference for known-working PyDSTool syntax.
-
----
-
-# `Labs/`
-
-Contains guided computational labs from MATH3888 workshops.
-
-These include:
-
-- material provided by the tutor;
-- implementations completed during or after workshops.
-
-This directory is one of the **main references for PyDSTool usage and syntax**.
-
-When implementing continuation or other PyDSTool functionality later, inspect the relevant lab examples before attempting to construct new API calls.
-
----
-
-# `Notes/`
-
-Contains project planning and mathematical specifications.
-
-## `checklist.md`
-
-Condensed computational checklist describing the main workflow.
-
-Use this for a quick overview of the planned computational stages.
-
-## `detailed_checklist.md`
-
-Expanded version of the computational checklist.
-
-This contains detailed explanations of:
-
-- baseline simulation;
-- robustness checks;
-- drug endpoint validation;
-- parameter sweeps;
-- equilibria and Jacobian stability;
-- one-parameter continuation;
-- two-parameter continuation;
-- optional fast–slow and hysteresis analysis.
-
-**Read this file before beginning a major computational stage.**
-
-## `model.md`
-
-Contains the mathematical specification of the Plant–Kim model, including:
-
-- the seven-dimensional dynamical system;
-- state-variable definitions;
-- ionic current terms;
-- model parameters and gating-function information.
-
-Treat this as the main local model specification when implementing the system.
-
-Do not alter the mathematical model or parameter values without justification.
-
----
-
-# `References/`
-
-Contains literature relevant to the project.
-
-The two primary references for the mathematical model are:
-
-- Plant & Kim (1975);
-- Plant & Kim (1976).
-
-These should be treated as the main scientific references for:
-
-- the R15 model;
-- parameter values;
-- gating functions;
-- untreated bursting;
-- TTX effects;
-- ouabain effects.
-
-Other papers are stored in subdirectories such as:
-
-- `Other References/`;
-- `R15 Papers/`.
-
-These may be useful for supporting context but are less central to the initial implementation.
-
-When there is disagreement between an informal note and the original Plant–Kim paper, flag the discrepancy rather than guessing which is correct.
-
----
-
-# `notebooks/`
-
-Currently reserved for the main computational notebooks produced for this project.
-
-Current notebooks:
-
-    notebooks/
-    ├── 01_baseline_model.ipynb
-    ├── 02_robustness_phase_planes.ipynb
-    ├── 03_drug_endpoints.ipynb
-    ├── 04_parameter_sweeps_equilibria.ipynb
-    └── 05_ttx_bifurcation.ipynb
-
-Possible later notebooks (not yet created):
-
-    notebooks/
-    └── 06_ouabain_bifurcation.ipynb
-
----
-
-# `src/`
-
-Reserved for reusable Python source code.
-
-The aim is eventually to avoid duplicating the full Plant–Kim model across multiple notebooks.
-
-Existing reusable model modules:
-
-    src/
-    ├── plant_kim_model.py
-    └── plant_kim_ttx_5d.py
-
-Additional helpers may be added later if needed. Do not create unnecessary abstractions before they are required.
-
----
-
-# `outputs/`
-
-Reserved for generated outputs.
-
-Possible structure:
-
-    outputs/
-    ├── figures/
-    └── data/
-
-Generated simulation figures, sweep summaries, or exported numerical results may eventually be stored here.
-
----
-
-# Other Files / Folders
-
-Miscellaneous files that are unrelated to the current computational analysis may be ignored unless specifically requested.
-
----
-
-# `docker-compose.yml`
-
-A Docker configuration is provided for an alternative PyDSTool environment with AUTO support.
-
-Use this environment for:
-
-- AUTO continuation;
-- periodic-orbit continuation (`LC-C`);
-- Hopf bifurcations requiring AUTO;
-- more advanced bifurcation calculations.
-
-Keep the host `.venv` for ordinary VODE/PyDSTool work (baseline simulation, sweeps, EP-C where available). Do **not** modify or replace the host `.venv` to obtain AUTO.
-
-### Verified Docker / AUTO smoke test (2026-09-18)
-
-Image: `curuy/math3888:latest` (compose service `jupyter-service`, container name `jupyter-lab`).
-
-Start / stop from the repository root:
+For an existing compatible local environment, launch JupyterLab from the repository root:
 
 ```bash
-docker compose up -d
-docker compose down
+./.venv/bin/jupyter-lab
 ```
 
-JupyterLab is then at `http://localhost:8888` with token `password`. The project tree is bind-mounted at `/notebooks`.
+For AUTO-backed calculations, the repository also includes [`docker-compose.yml`](docker-compose.yml), using the `curuy/math3888:latest` image. **Before running Docker Compose, update its machine-specific bind-mount path and review the exposed Jupyter port/token settings.** The original workflow used the local environment for VODE simulations and most equilibrium calculations, and Docker for AUTO continuation.
 
-Inside the container:
+Some notebooks display **saved CSVs and figures** generated by the corresponding scripts, rather than re-running expensive continuation automatically. For example, the two-parameter engine is [`scripts/run_07_two_parameter_bifurcation.py`](scripts/run_07_two_parameter_bifurcation.py), while the individual analysis uses the [`run_08_*`](scripts/) scripts and saved data under `outputs/data/jacobian_hopf/`. Reproducing the full pipeline therefore requires the appropriate environment and execution order; the repository is a research snapshot, not a packaged one-command application.
 
-- Python: `3.9.25` at `/usr/local/bin/python3`
-- PyDSTool: import OK (reports `1.19.5`)
-- AUTO: bundled under `PyDSTool/PyCont/auto` and compiled into the process CWD on first `LC-C`
+## Contributions and project context
 
-Minimal proven LC-C example: Selkov oscillator EP-C → Hopf → `LC-C` pattern from `Labs/Week 7 - Lab7 example.ipynb`.
+This work formed part of a **collaborative MATH3888 capstone project**. My contributions centred on the computational investigation: implementation and validation of the Plant–Kim simulations, drug-response and bifurcation analysis, preparation of report figures, and writing of the computational-results material for the group report. The separate individual component developed the symbolic Jacobian and local saddle-node/Hopf analysis described above.
 
-Important AUTO detail: PyDSTool writes `auto_*.py` / `_auto_*.so` into the **current working directory**, which must be importable (Jupyter notebooks already put CWD on `sys.path`; a script launched from another directory needs e.g. `PYTHONPATH="$(pwd)"` or an equivalent `sys.path` insert). Add generated AUTO artefacts to `.gitignore` rather than committing them.
+The [group report](Other/MATH3888_Group_9_Final_Report.pdf) provides the broader biological motivation, experimental context, mathematical modelling, and discussion. Experimental traces cited in the project come from the published literature; the traces shown in this README are numerical simulations.
 
----
+## Primary references
 
-# Model Implementation Principles
+- Plant, R. E., & Kim, M. (1976). *Mathematical description of a bursting pacemaker neuron by a modification of the Hodgkin–Huxley equations.* **Biophysical Journal, 16**(3), 227–244. [https://doi.org/10.1016/S0006-3495(76)85683-4](https://doi.org/10.1016/S0006-3495(76)85683-4)
+- Junge, D., & Stephens, C. L. (1973). *Cyclic variation of potassium conductance in a burst-generating neurone in Aplysia.* **The Journal of Physiology, 235**(1), 155–181. [https://doi.org/10.1113/jphysiol.1973.sp010382](https://doi.org/10.1113/jphysiol.1973.sp010382)
+- Plant, R. E., & Kim, M. (1975). *On the mechanism underlying bursting in the Aplysia abdominal ganglion R15 cell.* **Mathematical Biosciences, 26**, 357–375.
 
-When implementation begins:
-
-1. Implement the original untreated **7D Plant–Kim model first**.
-2. Follow the equations and parameters in `Notes/model.md` and the original Plant–Kim references.
-3. Do not initially:
-   - nondimensionalise the model;
-   - reduce its dimension;
-   - make quasi-steady-state approximations;
-   - alter parameters to force bursting.
-4. Put gating and time-constant functions into clearly defined auxiliary functions where practical.
-5. Validate the gating functions before trusting the complete ODE simulation.
-6. Reproduce baseline bursting before attempting drug sweeps or bifurcation analysis.
-7. If the baseline model does not reproduce the expected behaviour, investigate:
-   - transcription errors;
-   - parameter values;
-   - units;
-   - initial conditions;
-   - solver configuration;
-   - gating-function definitions;
-
-   before changing the mathematical model.
-
----
-
-# Exact TTX Reduction
-
-Complete TTX blockade corresponds to
-
-$$
-g_I=0.
-$$
-
-At this endpoint, the variables $X_I$ and $Y_I$ no longer feed back into the remaining system, so the effective dynamics can be reduced exactly from 7D to 5D.
-
-This reduction should **only** be used at complete TTX blockade.
-
-For
-
-$$
-g_I>0,
-$$
-
-the full 7D model must be retained.
-
----
-
-# Drug Parameters
-
-Later analysis may introduce scaled drug-strength parameters
-
-$$
-g_I=\alpha_I g_I^{(0)},
-$$
-
-and
-
-$$
-I_{\mathrm{ep}}=\alpha_P I_{\mathrm{ep}}^{(0)},
-$$
-
-where
-
-$$
-\alpha_I,\alpha_P\in[0,1].
-$$
-
-Interpretation:
-
-- $\alpha_I=1$: untreated inward conductance;
-- $\alpha_I=0$: complete TTX blockade;
-- $\alpha_P=1$: normal electrogenic pump strength;
-- $\alpha_P=0$: complete ouabain blockade.
-
-These parameters are primarily intended for later parameter sweeps and bifurcation analysis.
-
----
-
-# Current Stage
-
-The project is currently at the **environment verification and baseline implementation preparation stage**.
-
-The immediate goals are:
-
-1. verify that Cursor can use the local `.venv`;
-2. verify that PyDSTool imports correctly;
-3. verify that Jupyter/JupyterLab are available;
-4. identify the correct Jupyter kernel for the `.venv`;
-5. inspect the existing PyDSTool examples and repository structure;
-6. confirm that the environment is ready for implementation.
-
-**Do not begin full Plant–Kim model implementation until explicitly requested.**
+*Academic research project, University of Sydney, 2026.*
